@@ -7,5 +7,5 @@ node_modules/
 /playwright/.cache/
 .env
 storageState.json
-auth/
+/auth/
 .playwright-cli/
