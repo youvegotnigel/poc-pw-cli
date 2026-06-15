@@ -12,7 +12,7 @@ test.describe('Inventory', () => {
   test('sort by price low to high orders products correctly', async ({ inventoryPage }) => {
     await inventoryPage.sortBy('lohi');
     const priceTexts = await inventoryPage.prices.allTextContents();
-    const prices = priceTexts.map(p => parseFloat(p.replace('$', '')));
+    const prices = priceTexts.map((p) => parseFloat(p.replace('$', '')));
     expect(prices).toEqual([...prices].sort((a, b) => a - b));
   });
 

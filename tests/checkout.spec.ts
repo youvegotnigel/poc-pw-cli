@@ -1,11 +1,7 @@
 import { test, expect } from '../src/fixtures/test-fixtures';
 
 test.describe('Checkout', () => {
-  test('completes a full order from inventory to confirmation', async ({
-    inventoryPage,
-    cartPage,
-    checkoutPage,
-  }) => {
+  test('completes a full order from inventory to confirmation', async ({ inventoryPage, cartPage, checkoutPage }) => {
     await inventoryPage.goto();
     await inventoryPage.addToCart('sauce-labs-backpack');
     await inventoryPage.openCart();
