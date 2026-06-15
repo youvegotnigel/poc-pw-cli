@@ -5,6 +5,7 @@ const env = resolveEnv();
 
 export default defineConfig({
   testDir: './tests',
+  globalSetup: './src/auth/global-setup.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
@@ -12,9 +13,10 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }], ['allure-playwright']],
   use: {
     baseURL: env.baseURL,
+    testIdAttribute: 'data-test',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure', 
+    video: 'retain-on-failure',
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
