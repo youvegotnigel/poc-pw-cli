@@ -30,10 +30,26 @@ behavior; they never override the shared conventions.
 
 ## Tribal knowledge
 
-- The login flow sets an `ASP.NET_SessionId` cookie; the auth fixture persists it
-  via `storageState`. Do not re-implement login per test.
-- The reset endpoint `/api/test/reset` returns the app to a known seed. Call it in
-  a fixture, not inside individual tests.
+- The app under test is https://www.saucedemo.com (override with `BASE_URL`).
+  Login is at the site root `/`, not `/login`. Credentials come from
+  `resolveEnv()` in `src/config/env.ts` (defaults `standard_user` /
+  `secret_sauce`); a successful login lands on `/inventory.html`.
+- saucedemo exposes `data-test` attributes (e.g. `username`, `password`,
+  `login-button`), not `data-testid`. Playwright's `getByTestId` defaults to
+  `data-testid`, so set `testIdAttribute: 'data-test'` in `playwright.config.ts`
+  (currently unset) before relying on `getByTestId`, or use role/`data-test`
+  selectors directly.
+- The intended auth pattern is to capture the post-login `session-username` cookie
+  once and reuse it via `storageState` in an auth fixture — but that fixture does
+  NOT exist yet. `src/fixtures/test-fixtures.ts` only provides `loginPage`. Build
+  the auth fixture before assuming `storageState` is wired; don't expect it to be
+  there.
+- There is no server-side seed/reset endpoint (no `/api/test/reset`). To reset
+  state, use the app menu's "Reset App State" or clear cookies/localStorage in a
+  fixture.
+- `tests/login.spec.ts` is an illustrative placeholder: it hardcodes creds and
+  asserts `/login` and `/dashboard`, none of which match saucedemo. Treat it as a
+  sample, not a working baseline.
 - `npm run test:headed` is for local debugging only. CI always runs headless.
 
 > Maintainer note: keep this file thin. Shared rules live in AGENTS.md so every
