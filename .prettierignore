@@ -1,0 +1,10 @@
+# Build output and reports are generated, never format them.
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+allure-results/
+allure-report/
+playwright/.cache/
+# Lockfiles are tool-managed.
+package-lock.json
