@@ -9,8 +9,8 @@ export interface AppEnv {
 }
 
 export function resolveEnv(): AppEnv {
-  const baseURL = process.env.BASE_URL ?? 'http://localhost:3000';
-  const user = process.env.APP_USER ?? 'demo@shop.test';
-  const password = process.env.APP_PASSWORD ?? 'Passw0rd!';
+  const baseURL = process.env.BASE_URL ?? 'https://www.saucedemo.com';
+  const user = process.env.APP_USER ?? 'standard_user';
+  const password = process.env.APP_PASSWORD ?? 'secret_sauce';
   return { baseURL, user, password };
 }
