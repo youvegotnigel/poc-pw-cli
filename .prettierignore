@@ -8,3 +8,6 @@ allure-report/
 playwright/.cache/
 # Lockfiles are tool-managed.
 package-lock.json
+# AI agent skill files are managed externally, not by this project.
+.claude/
+.github/skills/
