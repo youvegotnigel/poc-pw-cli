@@ -9,7 +9,24 @@ Do not add anything extra.
 ## STEP 1 — Install dependencies
 
 ```bash
-npm install --save-dev allure-playwright allure-commandline
+npm install --save-dev allure-playwright allure-commandline allure-js-commons
+```
+
+`allure-playwright` is the Playwright reporter (wires into `playwright.config.ts`).
+`allure-commandline` is the CLI that generates the HTML report.
+`allure-js-commons` provides the runtime annotation functions (`feature`, `story`, `severity`, etc.)
+used inside test files. Do **not** use `import { allure } from 'allure-playwright'` for
+annotations — that API is deprecated. Import functions directly from `allure-js-commons`:
+
+```ts
+import { feature, story, severity } from 'allure-js-commons';
+
+test('example', async ({ page }) => {
+  await feature('Checkout');
+  await story('Happy path');
+  await severity('critical');
+  // ...
+});
 ```
 
 ---
