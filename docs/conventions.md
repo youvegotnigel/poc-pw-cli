@@ -112,6 +112,10 @@ The Allure report's Environment panel is populated automatically on every run vi
 
 Do not write `allure-results/environment.properties` manually or from a fixture; the reporter handles it. If you add or remove a browser project, add or remove the matching `environmentInfo` key to keep the panel accurate.
 
+`Branch` and `Commit` are included conditionally via `GITHUB_REF_NAME` / `GITHUB_SHA` — they appear in CI reports but are silently omitted on local runs.
+
+The **Executors** panel (CI run info — build number, link to Actions run) is populated by `executor.json` written in the `publish-report` CI job immediately before `allure generate`. Do not write this file locally; it is meaningless outside CI.
+
 ## Naming
 
 - Files: `kebab-case`, page objects `*.page.ts`, specs `*.spec.ts`.
