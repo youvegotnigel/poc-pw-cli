@@ -1,5 +1,7 @@
 # POC-PW-CLI
 
+[![Allure Report](https://img.shields.io/badge/Allure-Report-blue)](https://youvegotnigel.github.io/poc-pw-cli/)
+
 An AI-native Playwright + TypeScript end-to-end test automation framework. It
 pairs a conventional, review-friendly architecture (Page Object Model, fixtures,
 strict TypeScript, Allure) with the Playwright AI authoring loop (planner,
