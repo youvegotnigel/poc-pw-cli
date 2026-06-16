@@ -47,7 +47,68 @@ reporter: [['html', { open: 'never' }], ['allure-playwright']],
 
 ---
 
-## STEP 3 — Add npm script to package.json
+## STEP 3 — Add Allure environment info to playwright.config.ts
+
+The Allure report's **Environment** panel (shown on the report overview page) must
+be populated on every run. The `allure-playwright` reporter writes
+`allure-results/environment.properties` automatically when an `environmentInfo`
+object is passed in its config — no extra files, fixtures, or global setup needed.
+
+Add the two helper functions **before** `defineConfig`, then expand the reporter
+entry to pass `environmentInfo`. Use the exact code below, substituting only the
+browser names if the project targets different browsers.
+
+At the top of `playwright.config.ts`, add this import:
+
+```typescript
+import { readFileSync } from 'node:fs';
+```
+
+Then add these two helpers between the imports and `defineConfig`:
+
+```typescript
+function getPwVersion(): string {
+  try {
+    return (JSON.parse(readFileSync('node_modules/@playwright/test/package.json', 'utf8')) as { version: string }).version;
+  } catch {
+    return 'unknown';
+  }
+}
+
+function browserVersion(ua: string | undefined, re: RegExp): string {
+  return ua?.match(re)?.[1] ?? 'unknown';
+}
+```
+
+Then replace the `allure-playwright` entry in the `reporter` array:
+
+```typescript
+// Before:
+['allure-playwright']
+
+// After:
+['allure-playwright', {
+  environmentInfo: {
+    'Base URL': env.baseURL,            // or however the project resolves baseURL
+    'Node.js': process.version,
+    Platform: process.platform,
+    Playwright: getPwVersion(),
+    Chromium: browserVersion(devices['Desktop Chrome'].userAgent, /Chrome\/([\d.]+)/),
+    Firefox: browserVersion(devices['Desktop Firefox'].userAgent, /Firefox\/([\d.]+)/),
+    WebKit: browserVersion(devices['Desktop Safari'].userAgent, /Version\/([\d.]+)/),
+  },
+}]
+```
+
+> If the project only targets a subset of browsers, include only those keys. If it
+> uses a `BASE_URL` env var without a typed resolver, replace `env.baseURL` with
+> `process.env.BASE_URL ?? 'https://your-app.example.com'`.
+
+Run `npx tsc --noEmit` to confirm no type errors before continuing.
+
+---
+
+## STEP 4 — Add npm script to package.json
 
 Add this entry to the `"scripts"` section. Do not remove existing scripts.
 
@@ -57,7 +118,7 @@ Add this entry to the `"scripts"` section. Do not remove existing scripts.
 
 ---
 
-## STEP 4 — Update .gitignore
+## STEP 5 — Update .gitignore
 
 If these lines are not already present, add them:
 
@@ -68,7 +129,7 @@ allure-report/
 
 ---
 
-## STEP 5 — Create the GitHub Actions workflow
+## STEP 6 — Create the GitHub Actions workflow
 
 Detect the repository's default branch:
 
@@ -159,7 +220,7 @@ jobs:
 
 ---
 
-## STEP 6 — Verify
+## STEP 7 — Verify
 
 Run the following. It must succeed with zero errors.
 
@@ -169,7 +230,7 @@ npx tsc --noEmit
 
 ---
 
-## STEP 7 — Commit and push
+## STEP 8 — Commit and push
 
 Stage only these files:
 
@@ -181,7 +242,7 @@ git push
 
 ---
 
-## STEP 8 — Tell the user this one manual step is required
+## STEP 9 — Tell the user this one manual step is required
 
 > **One-time GitHub Settings change (cannot be automated):**
 >
