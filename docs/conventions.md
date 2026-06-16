@@ -87,14 +87,15 @@ test('user signs in and lands on dashboard', async ({ loginPage, page }) => {
 ## Allure metadata
 
 Every test sets feature/story/severity so reports are filterable by stakeholders.
+Import from `allure-js-commons` directly — the `allure` object from `allure-playwright` is deprecated.
 
 ```ts
-import { allure } from 'allure-playwright';
+import { feature, story, severity } from 'allure-js-commons';
 
 test('checkout completes with a saved card', async ({ checkoutPage }) => {
-  await allure.feature('Checkout');
-  await allure.story('Saved card payment');
-  await allure.severity('critical');
+  await feature('Checkout');
+  await story('Saved card payment');
+  await severity('critical');
   // ...
 });
 ```
