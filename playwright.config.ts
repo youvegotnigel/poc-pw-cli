@@ -6,7 +6,8 @@ const env = resolveEnv();
 
 function getPwVersion(): string {
   try {
-    return (JSON.parse(readFileSync('node_modules/@playwright/test/package.json', 'utf8')) as { version: string }).version;
+    return (JSON.parse(readFileSync('node_modules/@playwright/test/package.json', 'utf8')) as { version: string })
+      .version;
   } catch {
     return 'unknown';
   }
@@ -25,17 +26,20 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never' }],
-    ['allure-playwright', {
-      environmentInfo: {
-        'Base URL': env.baseURL,
-        'Node.js': process.version,
-        Platform: process.platform,
-        Playwright: getPwVersion(),
-        Chromium: browserVersion(devices['Desktop Chrome'].userAgent, /Chrome\/([\d.]+)/),
-        Firefox: browserVersion(devices['Desktop Firefox'].userAgent, /Firefox\/([\d.]+)/),
-        WebKit: browserVersion(devices['Desktop Safari'].userAgent, /Version\/([\d.]+)/),
+    [
+      'allure-playwright',
+      {
+        environmentInfo: {
+          'Base URL': env.baseURL,
+          'Node.js': process.version,
+          Platform: process.platform,
+          Playwright: getPwVersion(),
+          Chromium: browserVersion(devices['Desktop Chrome'].userAgent, /Chrome\/([\d.]+)/),
+          Firefox: browserVersion(devices['Desktop Firefox'].userAgent, /Firefox\/([\d.]+)/),
+          WebKit: browserVersion(devices['Desktop Safari'].userAgent, /Version\/([\d.]+)/),
+        },
       },
-    }],
+    ],
   ],
   use: {
     baseURL: env.baseURL,
