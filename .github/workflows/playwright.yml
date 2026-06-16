@@ -79,10 +79,14 @@ jobs:
           restore-keys: allure-history-
       - name: Generate Allure report
         run: npx allure generate allure-results --clean -o allure-report
+      - name: Stage updated history for cache
+        run: |
+          rm -rf allure-results/history
+          cp -r allure-report/history allure-results/history
       - name: Save Allure history
         uses: actions/cache/save@v4
         with:
-          path: allure-report/history
+          path: allure-results/history
           key: allure-history-${{ github.run_id }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
