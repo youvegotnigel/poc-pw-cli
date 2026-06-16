@@ -96,6 +96,9 @@ Then replace the `allure-playwright` entry in the `reporter` array:
     Chromium: browserVersion(devices['Desktop Chrome'].userAgent, /Chrome\/([\d.]+)/),
     Firefox: browserVersion(devices['Desktop Firefox'].userAgent, /Firefox\/([\d.]+)/),
     WebKit: browserVersion(devices['Desktop Safari'].userAgent, /Version\/([\d.]+)/),
+    // Branch and Commit are only set in GitHub Actions; omitted on local runs
+    ...(process.env.GITHUB_REF_NAME ? { Branch: process.env.GITHUB_REF_NAME } : {}),
+    ...(process.env.GITHUB_SHA ? { Commit: process.env.GITHUB_SHA.slice(0, 8) } : {}),
   },
 }]
 ```
@@ -198,6 +201,18 @@ jobs:
         with:
           name: allure-results
           path: allure-results/
+      - name: Write Allure executor info
+        run: |
+          cat > allure-results/executor.json << 'EOF'
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "buildOrder": ${{ github.run_number }},
+            "buildName": "Run #${{ github.run_number }}",
+            "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "reportName": "Allure Report"
+          }
+          EOF
       - name: Fetch Allure history from gh-pages
         run: |
           git fetch origin gh-pages --depth=1 2>/dev/null || exit 0
