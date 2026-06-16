@@ -72,20 +72,18 @@ jobs:
           }
           EOF
       - name: Restore Allure history
-        uses: actions/download-artifact@v4
+        uses: actions/cache/restore@v4
         with:
-          name: allure-history
-          path: allure-results/history/
-        continue-on-error: true
+          path: allure-results/history
+          key: allure-history-${{ github.run_id }}
+          restore-keys: allure-history-
       - name: Generate Allure report
         run: npx allure generate allure-results --clean -o allure-report
       - name: Save Allure history
-        uses: actions/upload-artifact@v4
+        uses: actions/cache/save@v4
         with:
-          name: allure-history
-          path: allure-report/history/
-          retention-days: 90
-          overwrite: true
+          path: allure-report/history
+          key: allure-history-${{ github.run_id }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
