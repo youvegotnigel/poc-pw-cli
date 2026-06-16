@@ -36,10 +36,18 @@ jobs:
 
   publish-report:
     needs: test
+    # "github-pages" environment is auto-created by GitHub once Pages source is
+    # set to "GitHub Actions" in Settings → Pages. The IDE may warn before that
+    # first-time setup — it is a false positive and safe to ignore.
     if: always() && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      pages: write
+      id-token: write
+      contents: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -58,8 +66,12 @@ jobs:
           git archive FETCH_HEAD history/ 2>/dev/null | tar -x -C allure-results/ 2>/dev/null || true
       - name: Generate Allure report
         run: npx allure generate allure-results --clean -o allure-report
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report/
+          path: allure-report/
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+      - name: Add report link to job summary
+        run: echo "## Allure Report" >> $GITHUB_STEP_SUMMARY && echo "[Open report](${{ steps.deploy.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
