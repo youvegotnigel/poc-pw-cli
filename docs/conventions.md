@@ -100,6 +100,18 @@ test('checkout completes with a saved card', async ({ checkoutPage }) => {
 });
 ```
 
+## Allure environment info
+
+The Allure report's Environment panel is populated automatically on every run via the `environmentInfo` option on the `allure-playwright` reporter in `playwright.config.ts`. It captures:
+
+- **Base URL** — from `resolveEnv()` (respects the `BASE_URL` env var)
+- **Node.js** — `process.version`
+- **Platform** — `process.platform`
+- **Playwright** — version read from `node_modules/@playwright/test/package.json`
+- **Chromium / Firefox / WebKit** — versions parsed from each device's bundled user-agent string
+
+Do not write `allure-results/environment.properties` manually or from a fixture; the reporter handles it. If you add or remove a browser project, add or remove the matching `environmentInfo` key to keep the panel accurate.
+
 ## Naming
 
 - Files: `kebab-case`, page objects `*.page.ts`, specs `*.spec.ts`.
