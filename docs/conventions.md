@@ -116,7 +116,7 @@ Do not write `allure-results/environment.properties` manually or from a fixture;
 
 The **Executors** panel (CI run info — build number, link to Actions run) is populated by `executor.json` written in the `publish-report` CI job immediately before `allure generate`. Do not write this file locally; it is meaningless outside CI.
 
-The **Trend** graph accumulates across runs via a GitHub Actions artifact named `allure-history`. At the start of each `publish-report` job, the artifact is downloaded into `allure-results/history/` before `allure generate` runs; after generation, `allure-report/history/` is re-uploaded as the new `allure-history` artifact (overwriting the previous one, `retention-days: 90`). The first run has no prior artifact and `continue-on-error: true` handles that gracefully. Do not use `git fetch origin gh-pages` to carry history — the GitHub Actions Pages deployment source does not guarantee a fetchable `gh-pages` branch.
+The **Trend** graph accumulates across runs via `actions/cache`. At the start of each `publish-report` job, `actions/cache/restore` restores `allure-results/history` from the most recent `allure-history-*` cache entry; after `allure generate`, `actions/cache/save` writes `allure-report/history` under a new key `allure-history-{run_id}`. The first run finds no cache and generates a single-entry trend; each subsequent run appends one more bar. Do not use `actions/download-artifact` for this purpose — v4 only resolves artifacts from the current workflow run, so cross-run history retrieval silently fails. Do not use `git fetch origin gh-pages` either — the GitHub Actions Pages deployment source does not guarantee a fetchable `gh-pages` branch.
 
 ## Naming
 
