@@ -37,6 +37,8 @@ export default defineConfig({
           Chromium: browserVersion(devices['Desktop Chrome'].userAgent, /Chrome\/([\d.]+)/),
           Firefox: browserVersion(devices['Desktop Firefox'].userAgent, /Firefox\/([\d.]+)/),
           WebKit: browserVersion(devices['Desktop Safari'].userAgent, /Version\/([\d.]+)/),
+          ...(process.env.GITHUB_REF_NAME ? { Branch: process.env.GITHUB_REF_NAME } : {}),
+          ...(process.env.GITHUB_SHA ? { Commit: process.env.GITHUB_SHA.slice(0, 8) } : {}),
         },
       },
     ],
