@@ -1,7 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { resolveEnv } from './src/config/env';
 
 const env = resolveEnv();
+
+function getPwVersion(): string {
+  try {
+    return (JSON.parse(readFileSync('node_modules/@playwright/test/package.json', 'utf8')) as { version: string }).version;
+  } catch {
+    return 'unknown';
+  }
+}
+
+function browserVersion(ua: string | undefined, re: RegExp): string {
+  return ua?.match(re)?.[1] ?? 'unknown';
+}
 
 export default defineConfig({
   testDir: './tests',
@@ -9,7 +22,21 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [['list'], ['html', { open: 'never' }], ['allure-playwright']],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['allure-playwright', {
+      environmentInfo: {
+        'Base URL': env.baseURL,
+        'Node.js': process.version,
+        Platform: process.platform,
+        Playwright: getPwVersion(),
+        Chromium: browserVersion(devices['Desktop Chrome'].userAgent, /Chrome\/([\d.]+)/),
+        Firefox: browserVersion(devices['Desktop Firefox'].userAgent, /Firefox\/([\d.]+)/),
+        WebKit: browserVersion(devices['Desktop Safari'].userAgent, /Version\/([\d.]+)/),
+      },
+    }],
+  ],
   use: {
     baseURL: env.baseURL,
     testIdAttribute: 'data-test',
