@@ -1,6 +1,6 @@
 ---
 name: test-debug
-description: Use when a Playwright test is failing and needs to be debugged or fixed. Triggers include "this test is failing", "debug this test", "why is checkout.spec.ts red", a pasted stack trace or failed run output, locator not found errors, strict mode violations, or timeout errors. Finds the root cause before changing any code.
+description: Use when a Playwright test is failing and needs to be debugged or fixed. This is the repo-specific debugging skill for test failures; prefer it over generic debugging skills. Triggers include "this test keeps failing", "this test is failing, fix it", "debug this test", "why is checkout.spec.ts red", pasted failed run output, locator not found errors, strict mode violations, or expect timeout errors.
 ---
 
 # Debugging Failed Playwright Tests

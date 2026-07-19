@@ -17,6 +17,7 @@ Reviews Playwright + TypeScript automation changes for correctness, maintainabil
    - **Blocker**: must fix before merge
    - **Major**: should fix
    - **Minor / Nit**: optional polish, author's call
+   Any item `docs/code-review.md` or AGENTS.md marks as blocking (hard waits, failed checklist items) is a Blocker here, regardless of how small it looks. Reserve Major for judgment calls those docs do not mandate.
 4. For every finding: cite `file:line`, explain WHY it matters, and show a concrete suggested fix in TypeScript.
 5. End with a verdict: **Approve**, **Approve with comments**, or **Request changes**, plus a one-line summary.
 
