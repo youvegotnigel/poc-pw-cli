@@ -34,7 +34,7 @@ Read the full output: error message, expected vs received, the call log, and att
 |---|---|
 | Locator resolves to 0 elements, or strict mode violation | Broken or ambiguous locator |
 | Element exists but assertion times out | Timing or wrong condition |
-| Passes alone, fails in the full suite | Isolation problem: use the flaky-triage skill instead |
+| Passes alone, fails in the full suite | Isolation problem: dispatch the flaky-investigator subagent instead |
 | Assertion compares against wrong value or account | Test data or environment config |
 | The app itself misbehaves when driven manually via playwright-cli | Genuine app bug |
 
