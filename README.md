@@ -71,3 +71,73 @@ The full, prioritized playbook (with per-tool concept cheat sheets) is in
 ## Layout
 
 See `AGENTS.md` section 4 and `docs/architecture.md`.
+
+
+# Spectre PoC
+
+A small Playwright + TypeScript proof of concept showing one clean pattern across four testing pillars: UI, API, accessibility, and security. It also ships the AI-assisted layer (CLAUDE.md, a review skill, a subagent, and hooks) so Claude Code enforces the same standards.
+
+## Layout
+
+```
+spectre-poc/
+├── playwright.config.ts        # one project per pillar (ui, api, a11y, security)
+├── eslint.config.mjs           # flat config, typed rules, Playwright plugin
+├── CLAUDE.md                   # conventions Claude Code always loads
+├── src/
+│   ├── pages/                  # BasePage, LoginPage, InventoryPage (POM)
+│   ├── api/clients/            # UserApiClient (typed request wrapper)
+│   ├── utils/                  # a11y (axe), security-headers
+│   └── fixtures/               # custom fixtures: loginPage, inventoryPage, userApi
+├── tests/
+│   ├── ui/login.spec.ts        # POM + fixtures + web-first assertions
+│   ├── api/users.spec.ts       # status + schema assertions
+│   ├── a11y/login.a11y.spec.ts # axe-core WCAG scan
+│   └── security/headers.spec.ts# baseline security header check
+└── .claude/
+    ├── settings.json           # permissions + hooks
+    ├── skills/playwright-pr-review/SKILL.md
+    ├── agents/flaky-investigator.md
+    └── hooks/lint-changed.sh, block-test-only.sh
+```
+
+## Setup
+
+```bash
+npm install
+npx playwright install
+```
+
+## Run
+
+```bash
+npm test                 # all pillars
+npm run test:ui          # UI only
+npm run test:api         # API only
+npm run test:a11y        # accessibility only
+npm run test:security    # security only
+npm run test:smoke       # everything tagged @smoke
+npm run report           # open the HTML report
+```
+
+## Targets and expected results
+
+The PoC points at public demo endpoints so it runs with zero setup:
+
+- UI, a11y, security: `https://www.saucedemo.com`
+- API: `https://jsonplaceholder.typicode.com`
+
+Override via `UI_BASE_URL` and `API_BASE_URL` (see `.env.example`).
+
+Two results are intentional and instructive:
+
+- The security header test is expected to report gaps against the demo site. That proves the check works. Point it at your own environment and the findings list should be empty.
+- The a11y test only fails the build on critical or serious violations, so minor issues do not block. Adjust the threshold in `src/utils/a11y.ts`.
+
+## Tags
+
+Tests are tagged for CI filtering: `@smoke`, `@regression`, `@critical`, plus pillar tags `@api`, `@a11y`, `@security`. Filter with `--grep`, for example `npx playwright test --grep @critical`.
+
+## Conventions
+
+Page Object Model by default. Locators live in page objects as `private readonly`; assertions live in the tests. No hardcoded waits, web-first assertions only, ESLint clean, no `any`. See `CLAUDE.md` for the full list.
