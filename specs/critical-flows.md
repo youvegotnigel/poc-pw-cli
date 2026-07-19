@@ -46,6 +46,8 @@ Uses `authedPage`. Full happy-path from inventory through order confirmation.
 | #   | Scenario       | Expected                                                                    |
 | --- | -------------- | --------------------------------------------------------------------------- |
 | 4a  | Complete order | Summary shows item total; confirmation header = "Thank you for your order!" |
+| 4b  | Missing first name on step 1 | Error shows "Error: First Name is required" and remains on checkout step 1 |
+| 4c  | Back Home from order confirmation | Navigates to `/inventory.html`; inventory items visible again |
 
 ### 5. Logout (`tests/logout.spec.ts`)
 

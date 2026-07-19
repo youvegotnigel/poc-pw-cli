@@ -60,5 +60,6 @@ and page objects link here instead of repeating this table.
 | Total                      | `getByTestId('total-label')`                                   |
 | Finish                     | `getByTestId('finish')`                                        |
 | Order confirmation heading | `getByTestId('complete-header')` → "Thank you for your order!" |
+| Back Home (confirmation)   | `getByTestId('back-to-products')` → navigates to `/inventory.html` |
 | Burger menu open           | `getByRole('button', { name: 'Open Menu' })`                   |
 | Logout link                | `getByTestId('logout-sidebar-link')`                           |
