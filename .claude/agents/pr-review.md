@@ -51,6 +51,8 @@ Each item states the passing condition. "Flag" is the anti-pattern to call out.
 - [ ] No hardcoded waits anywhere. Flag: `page.waitForTimeout()`, `sleep`, `setTimeout` wrappers. Always a Blocker.
 - [ ] Web-first assertions carry the waiting. Flag: manual `waitForSelector` before an interaction that auto-waits anyway.
 - [ ] `waitFor` appears only with an explicit, genuinely needed condition. Flag: `waitFor` sprinkled defensively "just in case".
+- [ ] Event waits registered before their trigger. Flag: `waitForResponse` / `waitForEvent` started after the click that fires it — an intermittent race. The fix is a promise captured first (`const p = page.waitForResponse(...)`) or `Promise.all([wait, action])`.
+- [ ] `Promise.all` used only for wait-plus-trigger or independent non-UI work. Flag: two UI actions on the same page inside `Promise.all`.
 
 ### Assertions
 
@@ -74,7 +76,9 @@ Each item states the passing condition. "Flag" is the anti-pattern to call out.
 ### Code quality and lint
 
 - [ ] ESLint clean. Flag: `eslint-disable` without a justifying comment.
-- [ ] Every promise awaited. Flag: floating promises, missing `await` on `expect` or page calls. Always a Blocker.
+- [ ] Every promise awaited. Flag: floating promises, missing `await` on `expect` or page calls, `async` callbacks inside `forEach` (never awaited — use `for...of` or one test per case). Always a Blocker.
+- [ ] No branching on one-shot checks. Flag: `if (await locator.isVisible())` — non-retrying, races the render; assert the expected state or use `locator.or()`.
+- [ ] No stored element handles or shared mutable state. Flag: `page.$` / `elementHandle` kept in variables (stale after re-render), module-level `let` shared across tests, unpinned time (`new Date()` in assertions) or unseeded random data.
 - [ ] Strict types. Flag: `any`, non-null `!` to silence the compiler. Prefer `unknown` plus narrowing for external data.
 - [ ] DRY. Flag: copy-paste blocks, unnecessary `for` loops, over-complicated conditionals.
 - [ ] No dead code, commented-out code, or leftover `console.log`.
