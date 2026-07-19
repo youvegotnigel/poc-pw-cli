@@ -9,7 +9,8 @@ import { CheckoutPage } from '../pages/checkout.page';
  * (auth reuse, app reset). This is the dependency-injection seam that keeps
  * specs free of boilerplate.
  *
- * authedPage: a Page loaded with storageState from global-setup, so tests
+ * authedPage: a Page loaded with storageState from the auth setup project
+ * (tests/auth.setup.ts), so tests
  * skip UI login. All page-object fixtures derive from this single page
  * instance so they share the same browser context within a test.
  *
