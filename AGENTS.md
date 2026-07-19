@@ -52,7 +52,8 @@ src/config/       Env resolution and typed config. No secrets committed.
 tests/            Spec files only. No locators or logic here, only flows.
 specs/            Markdown test PLANS written by the planner agent.
 agents/           Auto-generated agent definitions (planner/generator/healer).
-docs/             architecture.md, conventions.md, migration.md, code-review.md.
+docs/             architecture.md, conventions.md, app-reference.md,
+                  playwright-cli.md, migration.md, code-review.md.
                   Read the relevant one before authoring or migrating.
 ```
 
@@ -62,7 +63,9 @@ docs/             architecture.md, conventions.md, migration.md, code-review.md.
   locators or `page.click`. If a spec needs a new interaction, add a method to
   the relevant page object.
 - **Selectors:** prefer role-based and `getByTestId`. Never use brittle CSS or
-  XPath chains. The app exposes stable `data-testid` attributes; use them.
+  XPath chains. The app exposes stable `data-test` attributes (not `data-testid`);
+  `playwright.config.ts` sets `testIdAttribute: 'data-test'` so `getByTestId`
+  targets them. Verified selectors are catalogued in `docs/app-reference.md`.
 - **Assertions:** web-first only (`await expect(locator).toBeVisible()`).
   Never `expect(await locator.isVisible()).toBe(true)`.
 - **Waiting:** rely on auto-waiting and web-first assertions. No `waitForTimeout`
