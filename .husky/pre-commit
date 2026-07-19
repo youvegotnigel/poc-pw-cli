@@ -1,2 +1,10 @@
+# Block focused tests (same check as .claude/hooks/block-test-only.sh, but
+# enforced for every committer and every tool, not just Claude Code).
+if git diff --cached -U0 -- '*.spec.ts' '*.test.ts' \
+     | grep -qE '(test|it|describe)\.only\(|\bfdescribe\(|\bfit\('; then
+  echo "Blocked: remove test.only / fdescribe / fit before committing." >&2
+  exit 1
+fi
+
 npm run lint
 npm run typecheck

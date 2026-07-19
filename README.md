@@ -16,7 +16,8 @@ the converged 2026 pattern:
 | --------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `AGENTS.md`                       | Copilot, Codex, Cursor, Gemini, Aider, Windsurf | Single source of truth: stack, commands, architecture, conventions, boundaries                                              |
 | `CLAUDE.md`                       | Claude Code                                     | Thin shim that imports `AGENTS.md` and adds Claude-specific guardrails (Claude Code does not read `AGENTS.md` natively yet) |
-| `.github/copilot-instructions.md` | Copilot                                         | Copilot-specific behavior on top of `AGENTS.md`                                                                             |
+| `.github/copilot-instructions.md` | Copilot                                         | Copilot-specific behavior on top of `AGENTS.md`, incl. the `.claude/` ↔ `.github/` capability map                           |
+| `.claude/` + `.github/` mirrors   | Claude Code / Copilot                           | Skills (both), subagents ↔ `chatmodes/`, skill runs ↔ `prompts/`, hooks ↔ Husky + `instructions/` + `copilot-setup-steps`   |
 | `docs/architecture.md`            | humans + agents                                 | How the layers fit and how the AI loop works                                                                                |
 | `docs/conventions.md`             | humans + agents                                 | Exact code style with good/bad examples                                                                                     |
 | `docs/app-reference.md`           | humans + agents                                 | Facts about the app under test: URLs, auth wiring, verified selector table                                                  |
