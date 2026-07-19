@@ -1,44 +1,11 @@
 # Plan: Critical Flows — saucedemo.com
 
 Captured from live app exploration with playwright-cli on 2026-06-15.
+Status: implemented — the specs and page objects below exist in `tests/` and
+`src/pages/`.
 
-## App facts
-
-- Base URL: https://www.saucedemo.com
-- Login page: `/` (root)
-- Post-login landing: `/inventory.html`
-- `testIdAttribute`: `data-test` (not `data-testid`)
-- Auth: stored in `storageState` via `global-setup.ts`; no server-side reset endpoint — use "Reset App State" from burger menu or clear cookies/localStorage.
-
-## Stable selectors (verified in browser)
-
-| Element                    | Locator                                                        |
-| -------------------------- | -------------------------------------------------------------- |
-| Username input             | `getByTestId('username')`                                      |
-| Password input             | `getByTestId('password')`                                      |
-| Login button               | `getByTestId('login-button')`                                  |
-| Login error                | `getByTestId('error')`                                         |
-| Product items              | `getByTestId('inventory-item')`                                |
-| Product names              | `getByTestId('inventory-item-name')`                           |
-| Product prices             | `getByTestId('inventory-item-price')`                          |
-| Add to cart (list)         | `getByTestId('add-to-cart-{slug}')`                            |
-| Sort dropdown              | `getByTestId('product-sort-container')`                        |
-| Cart badge                 | `getByTestId('shopping-cart-badge')`                           |
-| Cart link                  | `getByTestId('shopping-cart-link')`                            |
-| Cart item names            | `getByTestId('inventory-item-name')`                           |
-| Remove item                | `getByTestId('remove-{slug}')`                                 |
-| Continue shopping          | `getByTestId('continue-shopping')`                             |
-| Checkout button            | `getByTestId('checkout')`                                      |
-| First name                 | `getByTestId('firstName')`                                     |
-| Last name                  | `getByTestId('lastName')`                                      |
-| Postal code                | `getByTestId('postalCode')`                                    |
-| Continue (checkout step 1) | `getByTestId('continue')`                                      |
-| Subtotal                   | `getByTestId('subtotal-label')`                                |
-| Total                      | `getByTestId('total-label')`                                   |
-| Finish                     | `getByTestId('finish')`                                        |
-| Order confirmation heading | `getByTestId('complete-header')` → "Thank you for your order!" |
-| Burger menu open           | `getByRole('button', { name: 'Open Menu' })`                   |
-| Logout link                | `getByTestId('logout-sidebar-link')`                           |
+App facts, auth wiring, and the verified selector table live in
+[`docs/app-reference.md`](../docs/app-reference.md).
 
 ## Test plan
 
@@ -88,17 +55,10 @@ Uses `authedPage`.
 | --- | -------------------- | --------------------------------------------- |
 | 5a  | Burger menu → Logout | Back on login page at `/`; login form visible |
 
-## Page objects to build
+## Page objects
 
 - `LoginPage` — goto, login, `errorMessage` locator
 - `InventoryPage` — goto, sortBy, addToCart, openCart, logout; `items`, `prices`, `cartBadge` locators
 - `CartPage` — removeItem, checkout, continueShopping; `itemNames`, `cartBadge` locators
 - `CheckoutPage` — fillInfo, continue, finish, backHome; `subtotal`, `total`, `confirmationHeader` locators
 - `BasePage` — open (protected), logout (public), `page` (public readonly)
-
-## Auth architecture
-
-- `src/auth/global-setup.ts` — logs in once, saves `auth/storageState.json`
-- `playwright.config.ts` — sets `globalSetup` + `testIdAttribute: 'data-test'`
-- `authedPage` fixture — opens a browser context loaded with `auth/storageState.json`
-- `loginPage` fixture — uses default `page` (no storageState) for auth tests
