@@ -17,7 +17,7 @@ Check `specs/` for an existing plan covering the scenario. If none exists, write
 
 ### 2. Explore the live app with the playwright-cli skill
 
-Read `docs/architecture.md` and `docs/conventions.md` first, then:
+Read `docs/architecture.md`, `docs/conventions.md`, and `docs/app-reference.md` first — the app-reference selector table may already have a verified locator for what you need. Then:
 
 ```bash
 playwright-cli open https://www.saucedemo.com
@@ -34,7 +34,7 @@ Locator priority, in order:
 1. `getByRole` with an accessible name
 2. `getByLabel` / `getByPlaceholder` for form fields
 3. `getByText` for static, unique content
-4. `getByTestId` as fallback — this app exposes `data-test`, so it only works with `testIdAttribute: 'data-test'` set in `playwright.config.ts`
+4. `getByTestId` as fallback — this app exposes `data-test`, which works because `playwright.config.ts` sets `testIdAttribute: 'data-test'`
 5. Raw CSS or XPath: never
 
 All Playwright locators auto-wait equally; determinism comes from web-first assertions, not from locator choice.
